@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@components/ui/button";
+import { Cookie as CookieIcon } from "lucide-react";
 
 // Permite reabrir preferencias desde Footer u otros elementos
 if (typeof window !== "undefined") {
@@ -175,13 +176,9 @@ export default function CookieConsent() {
           type="button"
           aria-label="Preferencias de cookies"
           onClick={() => setOpen(true)}
-          className="fixed bottom-4 right-4 z-[55] inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm shadow-md backdrop-blur supports-[backdrop-filter]:bg-white/70 hover:bg-white"
+          className="fixed bottom-4 right-4 z-[55] inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-800 shadow-md backdrop-blur transition-colors hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/>
-            <circle cx="12" cy="12" r="5"/>
-          </svg>
-          Preferencias
+          <CookieIcon className="h-5 w-5" aria-hidden />
         </button>
       )}
     </>
