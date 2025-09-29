@@ -15,6 +15,7 @@ export default function Home() {
   const formRef = useRef<HTMLDivElement | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const meta = useMemo(
     () => ({
@@ -49,11 +50,12 @@ export default function Home() {
       nextErrors.phone = "Teléfono no válido";
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) {
+    if (Object.keys(nextErrors).length > 0 || submitting) {
       return;
     }
 
     try {
+      setSubmitting(true);
       const res = await fetch("/api/form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,6 +78,8 @@ export default function Home() {
       formEl.reset();
     } catch (_err) {
       setErrors({ email: "No se pudo enviar. Inténtalo de nuevo en unos minutos." });
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -146,14 +150,14 @@ export default function Home() {
                         <div className="grid gap-3 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor="name-hero">Nombre</Label>
-                            <Input id="name-hero" name="name" placeholder="Tu nombre" />
+                            <Input id="name-hero" name="name" placeholder="Tu nombre" disabled={submitting} />
                             {errors.name && (
                               <p className="text-sm text-red-600">{errors.name}</p>
                             )}
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="company-hero">Empresa</Label>
-                            <Input id="company-hero" name="company" placeholder="Tu empresa" />
+                            <Input id="company-hero" name="company" placeholder="Tu empresa" disabled={submitting} />
                             {errors.company && (
                               <p className="text-sm text-red-600">{errors.company}</p>
                             )}
@@ -161,20 +165,27 @@ export default function Home() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email-hero">Email</Label>
-                          <Input id="email-hero" name="email" type="email" placeholder="tu@empresa.com" />
+                          <Input id="email-hero" name="email" type="email" placeholder="tu@empresa.com" disabled={submitting} />
                           {errors.email && (
                             <p className="text-sm text-red-600">{errors.email}</p>
                           )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="phone-hero">Teléfono (opcional)</Label>
-                          <Input id="phone-hero" name="phone" type="tel" placeholder="+34 6XX XX XX XX" />
+                          <Input id="phone-hero" name="phone" type="tel" placeholder="+34 6XX XX XX XX" disabled={submitting} />
                           {errors.phone && (
                             <p className="text-sm text-red-600">{errors.phone}</p>
                           )}
                         </div>
-                        <Button type="submit" className="w-full">
-                          Quiero conocerte, SKAI
+                        <Button type="submit" className="w-full" disabled={submitting} aria-busy={submitting}>
+                          {submitting ? (
+                            <span className="inline-flex items-center gap-2">
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
+                              Enviando...
+                            </span>
+                          ) : (
+                            "Quiero conocerte, SKAI"
+                          )}
                         </Button>
                         {success && (
                           <p className="text-center text-sm font-medium text-primary">
@@ -331,14 +342,14 @@ export default function Home() {
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="name-final">Nombre</Label>
-                        <Input id="name-final" name="name" placeholder="Tu nombre" />
+                        <Input id="name-final" name="name" placeholder="Tu nombre" disabled={submitting} />
                         {errors.name && (
                           <p className="text-sm text-red-600">{errors.name}</p>
                         )}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="company-final">Empresa</Label>
-                        <Input id="company-final" name="company" placeholder="Tu empresa" />
+                        <Input id="company-final" name="company" placeholder="Tu empresa" disabled={submitting} />
                         {errors.company && (
                           <p className="text-sm text-red-600">{errors.company}</p>
                         )}
@@ -346,20 +357,27 @@ export default function Home() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email-final">Email</Label>
-                      <Input id="email-final" name="email" type="email" placeholder="tu@empresa.com" />
+                      <Input id="email-final" name="email" type="email" placeholder="tu@empresa.com" disabled={submitting} />
                       {errors.email && (
                         <p className="text-sm text-red-600">{errors.email}</p>
                       )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone-final">Teléfono (opcional)</Label>
-                      <Input id="phone-final" name="phone" type="tel" placeholder="+34 6XX XX XX XX" />
+                      <Input id="phone-final" name="phone" type="tel" placeholder="+34 6XX XX XX XX" disabled={submitting} />
                       {errors.phone && (
                         <p className="text-sm text-red-600">{errors.phone}</p>
                       )}
                     </div>
-                    <Button type="submit" className="w-full">
-                      Quiero conocerte, SKAI
+                    <Button type="submit" className="w-full" disabled={submitting} aria-busy={submitting}>
+                      {submitting ? (
+                        <span className="inline-flex items-center gap-2">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
+                          Enviando...
+                        </span>
+                      ) : (
+                        "Quiero conocerte, SKAI"
+                      )}
                     </Button>
                     {success && (
                       <p className="text-center text-sm font-medium text-primary">
