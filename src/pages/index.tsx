@@ -110,7 +110,7 @@ export default function Home() {
                   transition={{ duration: 0.6 }}
                   className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl text-primary"
                 >
-                  Soy <span className="inline-flex translate-y-1 items-center align-baseline"><img src="/assets/skai-coral.svg" alt="SKAI" className="h-[1.1em] w-auto" /></span>. Ven a conocerme.
+                  Soy <span className="inline-flex translate-y-1 items-center align-baseline"><img src="/assets/skai-coral.svg" alt="SKAI" className="h-[1.1em] w-auto shrink-0" loading="eager" decoding="async" fetchPriority="high" width={1486} height={523} /></span>. Ven a conocerme.
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
