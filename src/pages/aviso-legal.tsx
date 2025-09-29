@@ -17,6 +17,10 @@ export default function AvisoLegal() {
         La navegación implica la aceptación de este aviso legal. El usuario se compromete a hacer un uso adecuado del sitio y a no realizar actividades
         ilícitas o contrarias al orden público, conforme a lo establecido por la legislación española.
       </p>
+      <h2>Condiciones de acceso y uso</h2>
+      <p>
+        El acceso es libre y gratuito. El usuario se compromete a no difundir contenidos ilícitos; no introducir malware; no vulnerar derechos de terceros; ni intentar acceder a áreas restringidas. El establecimiento de hiperenlaces no implica relación alguna con SOLVERKEY.
+      </p>
       <h2>Propiedad intelectual</h2>
       <p>
         Los contenidos de este sitio (textos, imágenes, diseño y código) pertenecen a SOLVERKEY o a sus licenciantes. No se ceden derechos de explotación más allá de lo
@@ -24,7 +28,7 @@ export default function AvisoLegal() {
       </p>
       <h2>Exclusión de garantías</h2>
       <p>
-        El contenido es informativo y puede no estar actualizado. SOLVERKEY no se responsabiliza de daños derivados del acceso o uso del sitio ni de los contenidos enlazados.
+        El contenido es informativo y puede no estar actualizado. SOLVERKEY no se responsabiliza de daños derivados del acceso o uso del sitio ni de los contenidos enlazados. La legislación aplicable es la española; jurisdicción, Juzgados y Tribunales de Logroño (España).
       </p>
       <p>
         Para más detalle, consulta el texto completo de referencia: {""}

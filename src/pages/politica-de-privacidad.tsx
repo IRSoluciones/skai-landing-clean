@@ -10,7 +10,13 @@ export default function PoliticaPrivacidad() {
       </Head>
       <h1>Política de privacidad</h1>
       <p>
-        SOLVER KEY IBERIA, S.L. (SOLVERKEY) es responsable del tratamiento. Finalidades principales: atención de solicitudes, contacto comercial, inscripción a jornadas y comunicaciones informativas. Base jurídica: consentimiento del interesado y ejecución de relación precontractual/contractual.
+        SOLVER KEY IBERIA, S.L. (SOLVERKEY) es responsable del tratamiento. Finalidades: gestionar solicitudes de información, registro a eventos, comunicaciones informativas y administración de este sitio. Bases jurídicas: consentimiento, ejecución de medidas precontractuales/contractuales e interés legítimo (mejora de servicios y seguridad).
+      </p>
+      <h2>Conservación</h2>
+      <p>Los datos se conservarán mientras dure la relación, exista obligación legal o el usuario no revoque su consentimiento.</p>
+      <h2>Destinatarios</h2>
+      <p>
+        Podrán existir encargados de tratamiento (proveedores tecnológicos y analítica). No se prevén transferencias internacionales fuera del EEE sin garantías adecuadas.
       </p>
       <p>
         Derechos: acceso, rectificación, supresión, oposición, limitación y portabilidad en <a href="mailto:privacidad@solverkey.es">privacidad@solverkey.es</a>. Más información y texto completo en: {""}
