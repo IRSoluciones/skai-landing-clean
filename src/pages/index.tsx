@@ -16,6 +16,7 @@ export default function Home() {
   const [success, setSuccess] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [acceptPolicy, setAcceptPolicy] = useState<boolean>(false);
 
   const meta = useMemo(
     () => ({
@@ -49,6 +50,9 @@ export default function Home() {
     if (phone && !/^\+?[0-9\s-]{7,}$/.test(phone))
       nextErrors.phone = "Teléfono no válido";
 
+    if (!acceptPolicy) {
+      nextErrors.accept = "Debes aceptar la política de privacidad";
+    }
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0 || submitting) {
       return;
@@ -177,7 +181,23 @@ export default function Home() {
                             <p className="text-sm text-red-600">{errors.phone}</p>
                           )}
                         </div>
-                        <Button type="submit" className="w-full" disabled={submitting} aria-busy={submitting}>
+                        <div className="flex items-start gap-2 text-sm">
+                          <input
+                            id="accept-hero"
+                            type="checkbox"
+                            className="mt-1"
+                            checked={acceptPolicy}
+                            onChange={(e) => setAcceptPolicy(e.target.checked)}
+                            disabled={submitting}
+                          />
+                          <label htmlFor="accept-hero" className="text-gray-700">
+                            Acepto la <a href="/politica-de-privacidad" className="underline">política de privacidad</a> y el <a href="/aviso-legal" className="underline">aviso legal</a>.
+                          </label>
+                        </div>
+                        {errors.accept && (
+                          <p className="text-sm text-red-600">{errors.accept}</p>
+                        )}
+                        <Button type="submit" className="w-full" disabled={submitting || !acceptPolicy} aria-busy={submitting}>
                           {submitting ? (
                             <span className="inline-flex items-center gap-2">
                               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
@@ -369,7 +389,23 @@ export default function Home() {
                         <p className="text-sm text-red-600">{errors.phone}</p>
                       )}
                     </div>
-                    <Button type="submit" className="w-full" disabled={submitting} aria-busy={submitting}>
+                    <div className="flex items-start gap-2 text-sm">
+                      <input
+                        id="accept-final"
+                        type="checkbox"
+                        className="mt-1"
+                        checked={acceptPolicy}
+                        onChange={(e) => setAcceptPolicy(e.target.checked)}
+                        disabled={submitting}
+                      />
+                      <label htmlFor="accept-final" className="text-gray-700">
+                        Acepto la <a href="/politica-de-privacidad" className="underline">política de privacidad</a> y el <a href="/aviso-legal" className="underline">aviso legal</a>.
+                      </label>
+                    </div>
+                    {errors.accept && (
+                      <p className="text-sm text-red-600">{errors.accept}</p>
+                    )}
+                    <Button type="submit" className="w-full" disabled={submitting || !acceptPolicy} aria-busy={submitting}>
                       {submitting ? (
                         <span className="inline-flex items-center gap-2">
                           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
