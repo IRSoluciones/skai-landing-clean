@@ -30,10 +30,11 @@ export default function Home() {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSuccess(null);
-    const form = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
     const name = String(form.get("name") || "").trim();
     const company = String(form.get("company") || "").trim();
     const email = String(form.get("email") || "").trim();
@@ -48,14 +49,33 @@ export default function Home() {
       nextErrors.phone = "Teléfono no válido";
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) {
-      // Simular envío
-      setTimeout(() => {
-        setSuccess(
-          "¡Listo! He reservado tu plaza. Te espero el 23 de octubre de 2025."
-        );
-        (e.currentTarget as HTMLFormElement).reset();
-      }, 500);
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          company,
+          email,
+          phone,
+          formId: formEl.id || "default",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      setSuccess(
+        "¡Listo! He reservado tu plaza. Te espero el 23 de octubre de 2025."
+      );
+      formEl.reset();
+    } catch (_err) {
+      setErrors({ email: "No se pudo enviar. Inténtalo de nuevo en unos minutos." });
     }
   }
 
@@ -122,7 +142,7 @@ export default function Home() {
                       <CardTitle className="text-xl">Reserva tu plaza gratuita</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <form onSubmit={handleSubmit} className="space-y-5">
+                      <form onSubmit={handleSubmit} id="hero-form" className="space-y-5">
                         <div className="grid gap-3 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor="name-hero">Nombre</Label>
@@ -307,7 +327,7 @@ export default function Home() {
                   <CardTitle className="text-2xl">Reserva tu plaza gratuita</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} id="final-form" className="space-y-5">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="name-final">Nombre</Label>
