@@ -112,7 +112,7 @@ export default async function handler(
         "https://n8n.solverkey.es/webhook/evento-skai-peticion-llamada";
     } else {
       webhookUrl =
-        process.env.N8N_WEBHOOK_RESERVATION_URL ||
+        process.env.N8N_WEBHOOK_URL ||
         "https://n8n.solverkey.es/webhook/evento-form-response";
     }
 
