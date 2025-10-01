@@ -200,8 +200,8 @@ export default function Home() {
                   <div className="relative w-fit max-w-full overflow-hidden rounded-2xl bg-secondary text-white shadow-lg">
                     <div className="flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center">
                       <div>
-                        <p className="text-lg font-semibold">¿Prefieres que te llame ahora?</p>
-                        <p className="text-white/90">Déjame tus datos y te contacto al instante.</p>
+                        <p className="text-lg font-semibold">¿Prefieres que te llame?</p>
+                        <p className="text-white/90">Déjame tus datos y te contacto lo antes posible.</p>
                       </div>
                       <Button 
                         onClick={() => setCallDialogOpen(true)}
@@ -503,7 +503,7 @@ export default function Home() {
                   <div>
                     <h3 className="text-2xl font-semibold">Solicitar llamada</h3>
                     <p className="mt-2 text-white/90">
-                      ¿Prefieres que te llame yo? Déjame tus datos y te contacto al instante para resolver tus dudas.
+                      ¿Prefieres que te llame? Déjame tus datos y te contacto lo antes posible para resolver tus dudas.
                     </p>
                   </div>
                   <div className="mt-8">
