@@ -104,9 +104,17 @@ export default async function handler(
       }
     }
 
-    const webhookUrl =
-      process.env.N8N_WEBHOOK_URL ||
-      "https://n8n.solverkey.es/webhook/evento-form-response";
+    // Seleccionar el webhook según el tipo de solicitud
+    let webhookUrl: string;
+    if (type === "call-request") {
+      webhookUrl =
+        process.env.N8N_WEBHOOK_CALL_REQUEST_URL ||
+        "https://n8n.solverkey.es/webhook/evento-skai-peticion-llamada";
+    } else {
+      webhookUrl =
+        process.env.N8N_WEBHOOK_RESERVATION_URL ||
+        "https://n8n.solverkey.es/webhook/evento-form-response";
+    }
 
     const token = process.env.N8N_WEBHOOK_TOKEN;
     if (!token) {
