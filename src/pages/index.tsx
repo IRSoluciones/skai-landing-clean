@@ -4,12 +4,17 @@ import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription 
+} from "@components/ui/dialog";
 import { motion } from "framer-motion";
 import FadeIn from "@components/visual/FadeIn";
 import ParallaxGradient from "@components/visual/ParallaxGradient";
 import MotionWaves from "@components/visual/MotionWaves";
-
-const EVENT_PHONE = "+34XXXXXXXXX"; // Sustituye por el número real
 
 export default function Home() {
   const formRef = useRef<HTMLDivElement | null>(null);
@@ -17,6 +22,12 @@ export default function Home() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [acceptPolicy, setAcceptPolicy] = useState<boolean>(false);
+  
+  // Estados para el diálogo de solicitud de llamada
+  const [callDialogOpen, setCallDialogOpen] = useState<boolean>(false);
+  const [callSuccess, setCallSuccess] = useState<string | null>(null);
+  const [callErrors, setCallErrors] = useState<Record<string, string>>({});
+  const [callSubmitting, setCallSubmitting] = useState<boolean>(false);
 
   const meta = useMemo(
     () => ({
@@ -87,6 +98,61 @@ export default function Home() {
     }
   }
 
+  async function handleCallRequest(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setCallSuccess(null);
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
+    const name = String(form.get("callName") || "").trim();
+    const company = String(form.get("callCompany") || "").trim();
+    const phone = String(form.get("callPhone") || "").trim();
+
+    const nextErrors: Record<string, string> = {};
+    if (!name) nextErrors.callName = "Tu nombre es obligatorio";
+    if (!company) nextErrors.callCompany = "La empresa es obligatoria";
+    if (!phone || !/^\+?[0-9\s-]{7,}$/.test(phone))
+      nextErrors.callPhone = "Teléfono válido requerido";
+
+    setCallErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0 || callSubmitting) {
+      return;
+    }
+
+    try {
+      setCallSubmitting(true);
+      const res = await fetch("/api/form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          company,
+          phone,
+          formId: "call-request",
+          type: "call-request",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      setCallSuccess(
+        "¡Perfecto! Te llamaré pronto. Mantén tu teléfono cerca."
+      );
+      formEl.reset();
+      
+      // Cerrar el diálogo después de 2 segundos
+      setTimeout(() => {
+        setCallDialogOpen(false);
+        setCallSuccess(null);
+      }, 2000);
+    } catch (_err) {
+      setCallErrors({ callPhone: "No se pudo enviar. Inténtalo de nuevo en unos minutos." });
+    } finally {
+      setCallSubmitting(false);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -129,13 +195,14 @@ export default function Home() {
                   <div className="relative w-fit max-w-full overflow-hidden rounded-2xl bg-secondary text-white shadow-lg">
                     <div className="flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center">
                       <div>
-                        <p className="text-lg font-semibold">¿Prefieres hablar conmigo ahora?</p>
-                        <p className="text-white/90">Pulsa el botón y te atiendo al instante.</p>
+                        <p className="text-lg font-semibold">¿Prefieres que te llame ahora?</p>
+                        <p className="text-white/90">Déjame tus datos y te contacto al instante.</p>
                       </div>
-                      <Button asChild className="bg-white text-secondary hover:bg-white/90">
-                        <a href={`tel:${EVENT_PHONE}`} aria-label="Llamar ahora a SKAI" className="inline-flex items-center gap-2">
-                          Llamar ahora a SKAI
-                        </a>
+                      <Button 
+                        onClick={() => setCallDialogOpen(true)}
+                        className="bg-white text-secondary hover:bg-white/90"
+                      >
+                        Solicitar llamada
                       </Button>
                     </div>
                   </div>
@@ -429,14 +496,17 @@ export default function Home() {
               <Card className="h-full overflow-hidden border-0 bg-secondary text-white shadow-lg">
                 <CardContent className="flex h-full flex-col justify-between p-8">
                   <div>
-                    <h3 className="text-2xl font-semibold">Llamada directa</h3>
+                    <h3 className="text-2xl font-semibold">Solicitar llamada</h3>
                     <p className="mt-2 text-white/90">
-                      ¿Prefieres hablar conmigo ahora mismo? Pulsa el botón para llamarme y te atiendo al instante.
+                      ¿Prefieres que te llame yo? Déjame tus datos y te contacto al instante para resolver tus dudas.
                     </p>
                   </div>
                   <div className="mt-8">
-                    <Button asChild className="w-full bg-white text-secondary hover:bg-white/90">
-                      <a href={`tel:${EVENT_PHONE}`}>Llamar ahora a SKAI</a>
+                    <Button 
+                      onClick={() => setCallDialogOpen(true)}
+                      className="w-full bg-white text-secondary hover:bg-white/90"
+                    >
+                      Solicitar llamada
                     </Button>
                   </div>
                 </CardContent>
@@ -451,6 +521,84 @@ export default function Home() {
             Este sitio web ha sido desarrollado junto a <strong>SKAI</strong>.
           </div>
         </div>
+
+        {/* Dialog para solicitud de llamada */}
+        <Dialog open={callDialogOpen} onOpenChange={setCallDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Solicitar llamada de SKAI</DialogTitle>
+              <DialogDescription>
+                Completa tus datos y te llamaré en breve para resolver todas tus dudas.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleCallRequest} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="callName">Nombre</Label>
+                <Input 
+                  id="callName" 
+                  name="callName" 
+                  placeholder="Tu nombre completo" 
+                  disabled={callSubmitting}
+                  required
+                />
+                {callErrors.callName && (
+                  <p className="text-sm text-red-600">{callErrors.callName}</p>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="callCompany">Empresa</Label>
+                <Input 
+                  id="callCompany" 
+                  name="callCompany" 
+                  placeholder="Tu empresa" 
+                  disabled={callSubmitting}
+                  required
+                />
+                {callErrors.callCompany && (
+                  <p className="text-sm text-red-600">{callErrors.callCompany}</p>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="callPhone">Teléfono</Label>
+                <Input 
+                  id="callPhone" 
+                  name="callPhone" 
+                  type="tel"
+                  placeholder="+34 6XX XX XX XX" 
+                  disabled={callSubmitting}
+                  required
+                />
+                {callErrors.callPhone && (
+                  <p className="text-sm text-red-600">{callErrors.callPhone}</p>
+                )}
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={callSubmitting}
+                aria-busy={callSubmitting}
+              >
+                {callSubmitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden />
+                    Enviando...
+                  </span>
+                ) : (
+                  "Solicitar llamada"
+                )}
+              </Button>
+
+              {callSuccess && (
+                <p className="text-center text-sm font-medium text-primary">
+                  {callSuccess}
+                </p>
+              )}
+            </form>
+          </DialogContent>
+        </Dialog>
       </main>
     </>
   );
