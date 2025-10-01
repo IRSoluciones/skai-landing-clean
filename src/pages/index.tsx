@@ -28,6 +28,7 @@ export default function Home() {
   const [callSuccess, setCallSuccess] = useState<string | null>(null);
   const [callErrors, setCallErrors] = useState<Record<string, string>>({});
   const [callSubmitting, setCallSubmitting] = useState<boolean>(false);
+  const [acceptCallPolicy, setAcceptCallPolicy] = useState<boolean>(false);
 
   const meta = useMemo(
     () => ({
@@ -112,6 +113,10 @@ export default function Home() {
     if (!company) nextErrors.callCompany = "La empresa es obligatoria";
     if (!phone || !/^\+?[0-9\s-]{7,}$/.test(phone))
       nextErrors.callPhone = "Teléfono válido requerido";
+    
+    if (!acceptCallPolicy) {
+      nextErrors.acceptCall = "Debes aceptar la política de privacidad";
+    }
 
     setCallErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0 || callSubmitting) {
@@ -575,10 +580,27 @@ export default function Home() {
                 )}
               </div>
 
+              <div className="flex items-start gap-2 text-sm">
+                <input
+                  id="accept-call"
+                  type="checkbox"
+                  className="mt-1"
+                  checked={acceptCallPolicy}
+                  onChange={(e) => setAcceptCallPolicy(e.target.checked)}
+                  disabled={callSubmitting}
+                />
+                <label htmlFor="accept-call" className="text-gray-700">
+                  Acepto la <a href="/politica-de-privacidad" target="_blank" className="underline">política de privacidad</a> y autorizo a SKAI a contactarme telefónicamente.
+                </label>
+              </div>
+              {callErrors.acceptCall && (
+                <p className="text-sm text-red-600">{callErrors.acceptCall}</p>
+              )}
+
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={callSubmitting}
+                disabled={callSubmitting || !acceptCallPolicy}
                 aria-busy={callSubmitting}
               >
                 {callSubmitting ? (

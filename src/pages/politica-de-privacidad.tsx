@@ -51,7 +51,13 @@ export default function PoliticaPrivacidad() {
 
       <div className="mt-8 rounded-2xl border bg-white p-5 shadow-sm">
         <div className="flex items-center gap-2 font-semibold"><FileCheck className="h-5 w-5" /> Finalidad del tratamiento</div>
-        <p className="mt-2 text-gray-700">La landing recopila los datos del formulario con el fin exclusivo de gestionar las invitaciones al evento y comunicaciones relacionadas. No se usarán para finalidades incompatibles.</p>
+        <p className="mt-2 text-gray-700">La landing recopila los datos del formulario con las siguientes finalidades:</p>
+        <ul className="mt-2">
+          <li>Gestionar las invitaciones al evento y comunicaciones relacionadas.</li>
+          <li>Realizar llamadas telefónicas para invitarte a eventos, presentaciones o demostraciones de la tecnología SKAI.</li>
+          <li>Proporcionar información sobre soluciones de IA corporativa y servicios relacionados.</li>
+        </ul>
+        <p className="mt-2 text-gray-700">No se usarán para finalidades incompatibles con las mencionadas.</p>
       </div>
 
       <div className="mt-8 rounded-2xl border bg-white p-5 shadow-sm">
