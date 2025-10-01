@@ -566,12 +566,12 @@ export default function Home() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="callPhone">Teléfono</Label>
+                <Label htmlFor="callPhone">Teléfono móvil</Label>
                 <Input 
                   id="callPhone" 
                   name="callPhone" 
                   type="tel"
-                  placeholder="+34 6XX XX XX XX" 
+                  placeholder="+34 6XX XX XX XX o 7XX XX XX XX" 
                   disabled={callSubmitting}
                   required
                 />

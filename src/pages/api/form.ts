@@ -72,6 +72,39 @@ function getClientIp(req: NextApiRequest): string {
 }
 
 /**
+ * Valida que el número de teléfono sea un móvil español
+ * Solo acepta números que empiecen por 6 o 7
+ */
+function validateSpanishMobile(phone: string): { valid: boolean; error?: string } {
+  // Limpiar el número de espacios, guiones y caracteres especiales
+  const cleaned = phone.replace(/[\s\-\(\)]/g, "");
+  
+  // Remover el prefijo +34 o 0034 si existe
+  let normalized = cleaned;
+  if (normalized.startsWith("+34")) {
+    normalized = normalized.substring(3);
+  } else if (normalized.startsWith("0034")) {
+    normalized = normalized.substring(4);
+  } else if (normalized.startsWith("34") && normalized.length === 11) {
+    normalized = normalized.substring(2);
+  }
+  
+  // Debe tener exactamente 9 dígitos
+  if (!/^\d{9}$/.test(normalized)) {
+    return { valid: false, error: "El teléfono debe tener 9 dígitos" };
+  }
+  
+  const firstDigit = normalized[0];
+  
+  // Solo móviles: 6XX XXX XXX o 7XX XXX XXX
+  if (firstDigit === "6" || firstDigit === "7") {
+    return { valid: true };
+  }
+  
+  return { valid: false, error: "Solo se admiten teléfonos móviles (6XX o 7XX)" };
+}
+
+/**
  * Valida que el número de teléfono sea español y válido
  * Rechaza números de tarificación especial, premium y adultos
  */
@@ -156,12 +189,12 @@ export default async function handler(
           .json({ ok: false, error: "Faltan campos requeridos" });
       }
       
-      // Validar el número de teléfono español
-      const phoneValidation = validateSpanishPhone(phone);
+      // Validar que sea un móvil español (solo 6XX o 7XX)
+      const phoneValidation = validateSpanishMobile(phone);
       if (!phoneValidation.valid) {
         return res
           .status(400)
-          .json({ ok: false, error: phoneValidation.error || "Teléfono no válido" });
+          .json({ ok: false, error: phoneValidation.error || "Teléfono móvil no válido" });
       }
     } else {
       // Para formulario de reserva: nombre, empresa y email son obligatorios
