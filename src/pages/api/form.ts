@@ -112,19 +112,19 @@ function validateSpanishPhone(phone: string): { valid: boolean; error?: string }
   // Limpiar el número de espacios, guiones y caracteres especiales
   const cleaned = phone.replace(/[\s\-\(\)]/g, "");
   
-  // Remover el prefijo +34 o 0034 si existe
+  // Remover el prefijo +34, 0034 o 34 si existe
   let normalized = cleaned;
   if (normalized.startsWith("+34")) {
     normalized = normalized.substring(3);
   } else if (normalized.startsWith("0034")) {
     normalized = normalized.substring(4);
-  } else if (normalized.startsWith("34") && normalized.length === 11) {
+  } else if (normalized.startsWith("34") && normalized.length > 9) {
     normalized = normalized.substring(2);
   }
   
   // Debe tener exactamente 9 dígitos
   if (!/^\d{9}$/.test(normalized)) {
-    return { valid: false, error: "El teléfono debe tener 9 dígitos" };
+    return { valid: false, error: "El teléfono debe tener 9 dígitos (ej: 612345678)" };
   }
   
   // Números premium y de tarificación especial a rechazar

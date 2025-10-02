@@ -88,15 +88,17 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        throw new Error(data.error || `Error ${res.status}`);
       }
 
       setSuccess(
         "¡Listo! He reservado tu plaza. Te espero el 23 de octubre de 2025."
       );
       formEl.reset();
-    } catch (_err) {
-      setErrors({ email: "No se pudo enviar. Inténtalo de nuevo en unos minutos." });
+    } catch (err: any) {
+      const errorMsg = err?.message || "No se pudo enviar. Inténtalo de nuevo en unos minutos.";
+      setErrors({ phone: errorMsg });
     } finally {
       setSubmitting(false);
     }
