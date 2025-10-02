@@ -197,21 +197,19 @@ export default async function handler(
           .json({ ok: false, error: phoneValidation.error || "Teléfono móvil no válido" });
       }
     } else {
-      // Para formulario de reserva: nombre, empresa y email son obligatorios
-      if (!name || !company || !email) {
+      // Para formulario de reserva: nombre, empresa, email y teléfono son obligatorios
+      if (!name || !company || !email || !phone) {
         return res
           .status(400)
           .json({ ok: false, error: "Faltan campos requeridos" });
       }
       
-      // Si hay teléfono, validarlo
-      if (phone) {
-        const phoneValidation = validateSpanishPhone(phone);
-        if (!phoneValidation.valid) {
-          return res
-            .status(400)
-            .json({ ok: false, error: phoneValidation.error || "Teléfono no válido" });
-        }
+      // Validar teléfono español
+      const phoneValidation = validateSpanishPhone(phone);
+      if (!phoneValidation.valid) {
+        return res
+          .status(400)
+          .json({ ok: false, error: phoneValidation.error || "Teléfono no válido" });
       }
     }
 

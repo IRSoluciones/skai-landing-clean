@@ -59,8 +59,11 @@ export default function Home() {
     if (!company) nextErrors.company = "La empresa es obligatoria";
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       nextErrors.email = "Email válido requerido";
-    if (phone && !/^\+?[0-9\s-]{7,}$/.test(phone))
+    if (!phone) {
+      nextErrors.phone = "El teléfono es obligatorio";
+    } else if (!/^[0-9\s-]{9,}$/.test(phone)) {
       nextErrors.phone = "Teléfono no válido";
+    }
 
     if (!acceptPolicy) {
       nextErrors.accept = "Debes aceptar la política de privacidad";
@@ -247,8 +250,8 @@ export default function Home() {
                           )}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="phone-hero">Teléfono (opcional)</Label>
-                          <Input id="phone-hero" name="phone" type="tel" placeholder="+34 6XX XX XX XX" disabled={submitting} />
+                          <Label htmlFor="phone-hero">Teléfono</Label>
+                          <Input id="phone-hero" name="phone" type="tel" placeholder="6XX XX XX XX" disabled={submitting} required />
                           {errors.phone && (
                             <p className="text-sm text-red-600">{errors.phone}</p>
                           )}
@@ -455,8 +458,8 @@ export default function Home() {
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="phone-final">Teléfono (opcional)</Label>
-                      <Input id="phone-final" name="phone" type="tel" placeholder="+34 6XX XX XX XX" disabled={submitting} />
+                      <Label htmlFor="phone-final">Teléfono</Label>
+                      <Input id="phone-final" name="phone" type="tel" placeholder="6XX XX XX XX" disabled={submitting} required />
                       {errors.phone && (
                         <p className="text-sm text-red-600">{errors.phone}</p>
                       )}
@@ -571,7 +574,7 @@ export default function Home() {
                   id="callPhone" 
                   name="callPhone" 
                   type="tel"
-                  placeholder="+34 6XX XX XX XX o 7XX XX XX XX" 
+                  placeholder="6XX XX XX XX o 7XX XX XX XX" 
                   disabled={callSubmitting}
                   required
                 />
